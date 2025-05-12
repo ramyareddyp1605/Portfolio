@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -57,9 +18,9 @@
             <div class="space-x-8">
                 <a href="#home" class="hover:text-pink-600 transition-colors">Home</a>
                 <a href="#about" class="hover:text-pink-600 transition-colors">About</a>
+                <a href="#work-experience" class="hover:text-pink-600 transition-colors">Work Experience</a>
                 <a href="#education" class="hover:text-pink-600 transition-colors">Education</a>
                 <a href="#my-projects" class="hover:text-pink-600 transition-colors">My Projects</a>
-                <a href="#designs" class="hover:text-pink-600 transition-colors">Designs</a>
                 <a href="#contact" class="hover:text-pink-600 transition-colors">Contact</a>
             </div>
         </div>
@@ -68,11 +29,11 @@
     <!-- Hero Section -->
     <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-[#FFF0F3]/20 to-[#FFB6C1]/20"></div>
-        <div class="z-10 flex flex-col md:flex-row items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="animate-profile md:mr-12">
-                <img src="images/profile.jpg" alt="Profile Picture" class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-pink-600 shadow-lg object-cover">
+        <div class="z-10 flex flex-col items-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="animate-profile mb-8">
+                <img src="https://via.placeholder.com/150" alt="Profile Picture" class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-pink-600 shadow-lg object-cover">
             </div>
-            <div class="text-center md:text-left mt-8 md:mt-0">
+            <div>
                 <h1 class="text-5xl md:text-7xl font-bold mb-6 animate-hero">
                     Creative Developer
                 </h1>
@@ -129,8 +90,33 @@
         </div>
     </section>
 
+    <!-- Work Experience Section -->
+    <section id="work-experience" class="py-20 bg-[#FFD1DC]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">Work Experience</h2>
+            <div class="space-y-12">
+                <div class="experience-item flex flex-col md:flex-row items-start">
+                    <div class="w-24 text-lg font-semibold text-pink-600 md:text-right md:pr-8">2022 - Present</div>
+                    <div class="flex-1 bg-[#FFF0F3] p-6 rounded-lg experience-card">
+                        <h3 class="text-xl font-semibold mb-2">Front-End Developer</h3>
+                        <p class="text-lg text-gray-600 mb-2">Tech Solutions Inc.</p>
+                        <p class="text-lg">Developed responsive web applications using React and Tailwind CSS, collaborating with designers to implement pixel-perfect UI/UX. Improved site performance by optimizing assets and code.</p>
+                    </div>
+                </div>
+                <div class="experience-item flex flex-col md:flex-row items-start">
+                    <div class="w-24 text-lg font-semibold text-pink-600 md:text-right md:pr-8">2020 - 2022</div>
+                    <div class="flex-1 bg-[#FFF0F3] p-6 rounded-lg experience-card">
+                        <h3 class="text-xl font-semibold mb-2">UI/UX Designer</h3>
+                        <p class="text-lg text-gray-600 mb-2">Creative Agency</p>
+                        <p class="text-lg">Designed user interfaces for web and mobile applications, conducting user research and creating wireframes with Figma. Enhanced user engagement through intuitive design systems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Education Section -->
-    <section id="education" class="py-20 bg-[#FFD1DC]">
+    <section id="education" class="py-20 bg-[#FFE4E9]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-4xl font-bold text-center mb-12">Education</h2>
             <div class="space-y-12">
@@ -211,33 +197,6 @@
         </div>
     </section>
 
-    <!-- Designs Section -->
-    <section id="designs" class="py-20 bg-[#FFE4E9]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center mb-12">Designs</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="design-card relative overflow-hidden rounded-lg">
-                    <img src="https://via.placeholder.com/400x300?text=Design+1" alt="Design 1" class="w-full h-64 object-cover transform hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <p class="text-white text-lg font-semibold">UI Design Concept</p>
-                    </div>
-                </div>
-                <div class="design-card relative overflow-hidden rounded-lg">
-                    <img src="https://via.placeholder.com/400x300?text=Design+2" alt="Design 2" class="w-full h-64 object-cover transform hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <p class="text-white text-lg font-semibold">Mobile App Mockup</p>
-                    </div>
-                </div>
-                <div class="design-card relative overflow-hidden rounded-lg">
-                    <img src="https://via.placeholder.com/400x300?text=Design+3" alt="Design 3" class="w-full h-64 object-cover transform hover:scale-105 transition-transform duration-300">
-                    <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                        <p class="text-white text-lg font-semibold">Website Prototype</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Contact Section -->
     <section id="contact" class="py-20 bg-[#FFE4E9]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -298,7 +257,7 @@
 
         gsap.from('.animate-profile', {
             opacity: 0,
-            x: -50,
+            y: -50,
             duration: 1,
             ease: 'power3.out'
         });
@@ -327,6 +286,19 @@
             ease: 'power3.out'
         });
 
+        // Work Experience section animations
+        gsap.from('.experience-card', {
+            scrollTrigger: {
+                trigger: '#work-experience',
+                start: 'top 80%'
+            },
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'power3.out'
+        });
+
         // Education section animations
         gsap.from('.education-card', {
             scrollTrigger: {
@@ -344,19 +316,6 @@
         gsap.from('.project-card', {
             scrollTrigger: {
                 trigger: '#my-projects',
-                start: 'top 80%'
-            },
-            opacity: 0,
-            y: 50,
-            duration: 1,
-            stagger: 0.2,
-            ease: 'power3.out'
-        });
-
-        // Designs section animations
-        gsap.from('.design-card', {
-            scrollTrigger: {
-                trigger: '#designs',
                 start: 'top 80%'
             },
             opacity: 0,
